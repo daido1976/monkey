@@ -25,10 +25,7 @@ func (l *Lexer) NextToken() token.Token {
 	switch l.char {
 	case '=':
 		if l.peekChar() == '=' {
-			prevChar := l.char
-			l.readChar()
-			literal := string(prevChar) + string(l.char)
-			tok = token.Token{Type: token.EQ, Literal: literal}
+			tok = l.makeTwoCharToken(token.EQ)
 		} else {
 			tok = newToken(token.ASSIGN, l.char)
 		}
@@ -54,10 +51,7 @@ func (l *Lexer) NextToken() token.Token {
 		tok = newToken(token.SLASH, l.char)
 	case '!':
 		if l.peekChar() == '=' {
-			prevChar := l.char
-			l.readChar()
-			literal := string(prevChar) + string(l.char)
-			tok = token.Token{Type: token.NOT_EQ, Literal: literal}
+			tok = l.makeTwoCharToken(token.NOT_EQ)
 		} else {
 			tok = newToken(token.BANG, l.char)
 		}
@@ -87,6 +81,13 @@ func (l *Lexer) NextToken() token.Token {
 
 func newToken(tokenType token.TokenType, char byte) token.Token {
 	return token.Token{Type: tokenType, Literal: string(char)}
+}
+
+func (l *Lexer) makeTwoCharToken(tokenType token.TokenType) token.Token {
+	prevChar := l.char
+	l.readChar()
+	literal := string(prevChar) + string(l.char)
+	return token.Token{Type: tokenType, Literal: literal}
 }
 
 func (l *Lexer) skipWhitespace() {
