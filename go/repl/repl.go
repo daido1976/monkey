@@ -6,8 +6,8 @@ import (
 	"io"
 	"os"
 
-	"github.com/daido1976/monkey/lexer"
-	"github.com/daido1976/monkey/token"
+	"github.com/daido1976/monkey/go/lexer"
+	"github.com/daido1976/monkey/go/token"
 )
 
 const PROMPT = "monkey> "
