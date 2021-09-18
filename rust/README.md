@@ -1,0 +1,3 @@
+- [「Go 言語でつくるインタプリタ」を Rust で実装しました。 \- Sansan Builders Blog](https://buildersbox.corp-sansan.com/entry/2020/06/29/110000)
+- [Writing An Interpreter In Rust して、Wasm で動かしてみた \- wadackel\.me](https://blog.wadackel.me/2018/rs-monkey-lang/)
+- [Rust 言語で作るインタプリタ \- YouTube](https://youtu.be/zdq1lUo7b-I)
