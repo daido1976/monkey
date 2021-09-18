@@ -1,9 +1,9 @@
 package parser
 
 import (
-	"github.com/daido1976/monkey/ast"
-	"github.com/daido1976/monkey/lexer"
-	"github.com/daido1976/monkey/token"
+	"github.com/daido1976/monkey/go/ast"
+	"github.com/daido1976/monkey/go/lexer"
+	"github.com/daido1976/monkey/go/token"
 )
 
 type Parser struct {
