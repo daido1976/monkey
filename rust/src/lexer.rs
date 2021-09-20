@@ -128,12 +128,20 @@ mod tests {
         let input = "
             let five = 5;
             let ten = 10;
+
             let add = fn(x, y) {
-            x + y;
+                x + y;
             };
             let result = add(five, ten);
+
             !-/*5;
             5 < 10 > 5;
+
+            if (5 < 10) {
+                return true;
+            } else {
+                return false;
+            }
         "
         .to_string();
         let mut l = Lexer::new(input);
@@ -186,6 +194,23 @@ mod tests {
             (TokenType::GT, ">".to_string()),
             (TokenType::INT, "5".to_string()),
             (TokenType::SEMICOLON, ";".to_string()),
+            (TokenType::IF, "if".to_string()),
+            (TokenType::LPAREN, "(".to_string()),
+            (TokenType::INT, "5".to_string()),
+            (TokenType::LT, "<".to_string()),
+            (TokenType::INT, "10".to_string()),
+            (TokenType::RPAREN, ")".to_string()),
+            (TokenType::LBRACE, "{".to_string()),
+            (TokenType::RETURN, "return".to_string()),
+            (TokenType::TRUE, "true".to_string()),
+            (TokenType::SEMICOLON, ";".to_string()),
+            (TokenType::RBRACE, "}".to_string()),
+            (TokenType::ELSE, "else".to_string()),
+            (TokenType::LBRACE, "{".to_string()),
+            (TokenType::RETURN, "return".to_string()),
+            (TokenType::FALSE, "false".to_string()),
+            (TokenType::SEMICOLON, ";".to_string()),
+            (TokenType::RBRACE, "}".to_string()),
             (TokenType::EOF, "".to_string()),
         ];
 

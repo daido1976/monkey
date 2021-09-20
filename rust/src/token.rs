@@ -32,12 +32,22 @@ pub enum TokenType {
     // keyword
     FUNCTION, // FUNCTION
     LET,      // LET
+    TRUE,     // true
+    FALSE,    // false
+    IF,       // if
+    ELSE,     // else
+    RETURN,   // return
 }
 
 pub fn lookup_identifier(identifier: &str) -> TokenType {
     match identifier {
         "let" => TokenType::LET,
         "fn" => TokenType::FUNCTION,
+        "true" => TokenType::TRUE,
+        "false" => TokenType::FALSE,
+        "if" => TokenType::IF,
+        "else" => TokenType::ELSE,
+        "return" => TokenType::RETURN,
         _ => TokenType::IDENT,
     }
 }
