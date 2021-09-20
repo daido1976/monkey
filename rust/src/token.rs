@@ -29,6 +29,14 @@ pub enum TokenType {
     LET,      // LET
 }
 
+pub fn lookup_identifier(identifier: &str) -> TokenType {
+    match identifier {
+        "let" => TokenType::LET,
+        "fn" => TokenType::FUNCTION,
+        _ => TokenType::IDENT,
+    }
+}
+
 pub struct Token {
     pub token_type: TokenType,
     pub literal: String,
