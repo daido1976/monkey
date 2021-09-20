@@ -32,6 +32,12 @@ impl Lexer {
             b'}' => token = Self::new_token(TokenType::RBRACE, self.char),
             b',' => token = Self::new_token(TokenType::COMMA, self.char),
             b'+' => token = Self::new_token(TokenType::PLUS, self.char),
+            b'-' => token = Self::new_token(TokenType::MINUS, self.char),
+            b'*' => token = Self::new_token(TokenType::ASTERISK, self.char),
+            b'/' => token = Self::new_token(TokenType::SLASH, self.char),
+            b'!' => token = Self::new_token(TokenType::BANG, self.char),
+            b'<' => token = Self::new_token(TokenType::LT, self.char),
+            b'>' => token = Self::new_token(TokenType::GT, self.char),
             0 => {
                 token = Token {
                     token_type: TokenType::EOF,
@@ -126,6 +132,8 @@ mod tests {
             x + y;
             };
             let result = add(five, ten);
+            !-/*5;
+            5 < 10 > 5;
         "
         .to_string();
         let mut l = Lexer::new(input);
@@ -165,6 +173,18 @@ mod tests {
             (TokenType::COMMA, ",".to_string()),
             (TokenType::IDENT, "ten".to_string()),
             (TokenType::RPAREN, ")".to_string()),
+            (TokenType::SEMICOLON, ";".to_string()),
+            (TokenType::BANG, "!".to_string()),
+            (TokenType::MINUS, "-".to_string()),
+            (TokenType::SLASH, "/".to_string()),
+            (TokenType::ASTERISK, "*".to_string()),
+            (TokenType::INT, "5".to_string()),
+            (TokenType::SEMICOLON, ";".to_string()),
+            (TokenType::INT, "5".to_string()),
+            (TokenType::LT, "<".to_string()),
+            (TokenType::INT, "10".to_string()),
+            (TokenType::GT, ">".to_string()),
+            (TokenType::INT, "5".to_string()),
             (TokenType::SEMICOLON, ";".to_string()),
             (TokenType::EOF, "".to_string()),
         ];

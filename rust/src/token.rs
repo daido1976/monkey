@@ -9,11 +9,16 @@ pub enum TokenType {
     INT,   // 123...
 
     // operator
-    ASSIGN, // =
-    PLUS,   // +
-    LT,     // <
-    GT,     // >
-    EQ,     // ==
+    ASSIGN,   // =
+    PLUS,     // +
+    MINUS,    // -
+    BANG,     // !
+    ASTERISK, // *
+    SLASH,    // /
+
+    LT, // <
+    GT, // >
+    EQ, // ==
 
     // delimiter
     COMMA,     // ,
