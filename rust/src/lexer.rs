@@ -24,7 +24,6 @@ impl Lexer {
         self.skip_whitespace();
 
         match self.char {
-            b'=' => token = Self::new_token(TokenType::ASSIGN, self.char),
             b';' => token = Self::new_token(TokenType::SEMICOLON, self.char),
             b'(' => token = Self::new_token(TokenType::LPAREN, self.char),
             b')' => token = Self::new_token(TokenType::RPAREN, self.char),
@@ -35,7 +34,32 @@ impl Lexer {
             b'-' => token = Self::new_token(TokenType::MINUS, self.char),
             b'*' => token = Self::new_token(TokenType::ASTERISK, self.char),
             b'/' => token = Self::new_token(TokenType::SLASH, self.char),
-            b'!' => token = Self::new_token(TokenType::BANG, self.char),
+            b'=' => {
+                token = if self.peek_char() == b'=' {
+                    let prev_char = self.char;
+                    self.read_char();
+                    let literal = String::from_utf8(vec![prev_char, self.char]).unwrap();
+                    Token {
+                        token_type: TokenType::EQ,
+                        literal,
+                    }
+                } else {
+                    Self::new_token(TokenType::ASSIGN, self.char)
+                }
+            }
+            b'!' => {
+                token = if self.peek_char() == b'=' {
+                    let prev_char = self.char;
+                    self.read_char();
+                    let literal = String::from_utf8(vec![prev_char, self.char]).unwrap();
+                    Token {
+                        token_type: TokenType::NOT_EQ,
+                        literal,
+                    }
+                } else {
+                    Self::new_token(TokenType::BANG, self.char)
+                }
+            }
             b'<' => token = Self::new_token(TokenType::LT, self.char),
             b'>' => token = Self::new_token(TokenType::GT, self.char),
             0 => {
@@ -91,6 +115,14 @@ impl Lexer {
         self.read_position += 1;
     }
 
+    fn peek_char(&mut self) -> u8 {
+        if self.read_position >= self.input.len() {
+            0
+        } else {
+            return self.input.as_bytes()[self.read_position];
+        }
+    }
+
     fn read_identifier(&mut self) -> String {
         let prev_position = self.position;
         while Self::is_letter(self.char) {
@@ -142,6 +174,9 @@ mod tests {
             } else {
                 return false;
             }
+
+            10 == 10;
+            10 != 9;
         "
         .to_string();
         let mut l = Lexer::new(input);
@@ -211,6 +246,14 @@ mod tests {
             (TokenType::FALSE, "false".to_string()),
             (TokenType::SEMICOLON, ";".to_string()),
             (TokenType::RBRACE, "}".to_string()),
+            (TokenType::INT, "10".to_string()),
+            (TokenType::EQ, "==".to_string()),
+            (TokenType::INT, "10".to_string()),
+            (TokenType::SEMICOLON, ";".to_string()),
+            (TokenType::INT, "10".to_string()),
+            (TokenType::NOT_EQ, "!=".to_string()),
+            (TokenType::INT, "9".to_string()),
+            (TokenType::SEMICOLON, ";".to_string()),
             (TokenType::EOF, "".to_string()),
         ];
 

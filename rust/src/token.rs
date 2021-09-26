@@ -16,9 +16,10 @@ pub enum TokenType {
     ASTERISK, // *
     SLASH,    // /
 
-    LT, // <
-    GT, // >
-    EQ, // ==
+    LT,     // <
+    GT,     // >
+    EQ,     // ==
+    NOT_EQ, // !=
 
     // delimiter
     COMMA,     // ,
