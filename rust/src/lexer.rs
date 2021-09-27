@@ -36,10 +36,14 @@ impl Lexer {
             b'/' => self.make_one_char_token(TokenType::SLASH),
             b'<' => self.make_one_char_token(TokenType::LT),
             b'>' => self.make_one_char_token(TokenType::GT),
-            b'=' if self.peek_char() == b'=' => self.make_two_char_token(TokenType::EQ),
-            b'=' => self.make_one_char_token(TokenType::ASSIGN),
-            b'!' if self.peek_char() == b'=' => self.make_two_char_token(TokenType::NOT_EQ),
-            b'!' => self.make_one_char_token(TokenType::BANG),
+            b'=' => match self.peek_char() {
+                b'=' => self.make_two_char_token(TokenType::EQ),
+                _ => self.make_one_char_token(TokenType::ASSIGN),
+            },
+            b'!' => match self.peek_char() {
+                b'=' => self.make_two_char_token(TokenType::NOT_EQ),
+                _ => self.make_one_char_token(TokenType::BANG),
+            },
             0 => self.make_eof_token(),
             _ if Self::is_letter(self.char) => return self.make_letter_token(),
             _ if Self::is_number(self.char) => return self.make_number_token(),
