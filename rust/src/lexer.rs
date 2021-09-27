@@ -23,51 +23,37 @@ impl Lexer {
         let token: Token;
         self.skip_whitespace();
 
-        match self.char {
-            b';' => token = Self::new_token(TokenType::SEMICOLON, self.char),
-            b'(' => token = Self::new_token(TokenType::LPAREN, self.char),
-            b')' => token = Self::new_token(TokenType::RPAREN, self.char),
-            b'{' => token = Self::new_token(TokenType::LBRACE, self.char),
-            b'}' => token = Self::new_token(TokenType::RBRACE, self.char),
-            b',' => token = Self::new_token(TokenType::COMMA, self.char),
-            b'+' => token = Self::new_token(TokenType::PLUS, self.char),
-            b'-' => token = Self::new_token(TokenType::MINUS, self.char),
-            b'*' => token = Self::new_token(TokenType::ASTERISK, self.char),
-            b'/' => token = Self::new_token(TokenType::SLASH, self.char),
+        token = match self.char {
+            b';' => self.make_one_char_token(TokenType::SEMICOLON),
+            b'(' => self.make_one_char_token(TokenType::LPAREN),
+            b')' => self.make_one_char_token(TokenType::RPAREN),
+            b'{' => self.make_one_char_token(TokenType::LBRACE),
+            b'}' => self.make_one_char_token(TokenType::RBRACE),
+            b',' => self.make_one_char_token(TokenType::COMMA),
+            b'+' => self.make_one_char_token(TokenType::PLUS),
+            b'-' => self.make_one_char_token(TokenType::MINUS),
+            b'*' => self.make_one_char_token(TokenType::ASTERISK),
+            b'/' => self.make_one_char_token(TokenType::SLASH),
             b'=' => {
-                token = if self.peek_char() == b'=' {
-                    let prev_char = self.char;
-                    self.read_char();
-                    let literal = String::from_utf8(vec![prev_char, self.char]).unwrap();
-                    Token {
-                        token_type: TokenType::EQ,
-                        literal,
-                    }
+                if self.peek_char() == b'=' {
+                    self.make_two_char_token(TokenType::EQ)
                 } else {
-                    Self::new_token(TokenType::ASSIGN, self.char)
+                    self.make_one_char_token(TokenType::ASSIGN)
                 }
             }
             b'!' => {
-                token = if self.peek_char() == b'=' {
-                    let prev_char = self.char;
-                    self.read_char();
-                    let literal = String::from_utf8(vec![prev_char, self.char]).unwrap();
-                    Token {
-                        token_type: TokenType::NOT_EQ,
-                        literal,
-                    }
+                if self.peek_char() == b'=' {
+                    self.make_two_char_token(TokenType::NOT_EQ)
                 } else {
-                    Self::new_token(TokenType::BANG, self.char)
+                    self.make_one_char_token(TokenType::BANG)
                 }
             }
-            b'<' => token = Self::new_token(TokenType::LT, self.char),
-            b'>' => token = Self::new_token(TokenType::GT, self.char),
-            0 => {
-                token = Token {
-                    token_type: TokenType::EOF,
-                    literal: "".to_string(),
-                };
-            }
+            b'<' => self.make_one_char_token(TokenType::LT),
+            b'>' => self.make_one_char_token(TokenType::GT),
+            0 => Token {
+                token_type: TokenType::EOF,
+                literal: "".to_string(),
+            },
             _ => {
                 if Self::is_letter(self.char) {
                     let identifier = self.read_identifier();
@@ -84,18 +70,28 @@ impl Lexer {
                         literal,
                     };
                 } else {
-                    token = Self::new_token(TokenType::ILLEGAL, self.char)
+                    self.make_one_char_token(TokenType::ILLEGAL)
                 }
             }
-        }
+        };
         self.read_char();
         token
     }
 
-    fn new_token(token_type: TokenType, char: u8) -> Token {
+    fn make_one_char_token(&mut self, token_type: TokenType) -> Token {
         Token {
             token_type,
-            literal: String::from_utf8(vec![char]).unwrap(),
+            literal: String::from_utf8(vec![self.char]).unwrap(),
+        }
+    }
+
+    fn make_two_char_token(&mut self, token_type: TokenType) -> Token {
+        let prev_char = self.char;
+        self.read_char();
+        let literal = String::from_utf8(vec![prev_char, self.char]).unwrap();
+        Token {
+            token_type,
+            literal,
         }
     }
 
