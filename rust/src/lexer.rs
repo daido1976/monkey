@@ -50,25 +50,12 @@ impl Lexer {
             }
             b'<' => self.make_one_char_token(TokenType::LT),
             b'>' => self.make_one_char_token(TokenType::GT),
-            0 => Token {
-                token_type: TokenType::EOF,
-                literal: "".to_string(),
-            },
+            0 => self.make_eof_token(),
             _ => {
                 if Self::is_letter(self.char) {
-                    let identifier = self.read_identifier();
-                    let token_type = lookup_identifier(&identifier);
-                    return Token {
-                        token_type,
-                        literal: identifier,
-                    };
+                    return self.make_letter_token();
                 } else if Self::is_number(self.char) {
-                    let literal = self.read_number();
-                    let token_type = TokenType::INT;
-                    return Token {
-                        token_type,
-                        literal,
-                    };
+                    return self.make_number_token();
                 } else {
                     self.make_one_char_token(TokenType::ILLEGAL)
                 }
@@ -89,6 +76,31 @@ impl Lexer {
         let prev_char = self.char;
         self.read_char();
         let literal = String::from_utf8(vec![prev_char, self.char]).unwrap();
+        Token {
+            token_type,
+            literal,
+        }
+    }
+
+    fn make_eof_token(&mut self) -> Token {
+        Token {
+            token_type: TokenType::EOF,
+            literal: "".to_string(),
+        }
+    }
+
+    fn make_letter_token(&mut self) -> Token {
+        let identifier = self.read_identifier();
+        let token_type = lookup_identifier(&identifier);
+        Token {
+            token_type,
+            literal: identifier,
+        }
+    }
+
+    fn make_number_token(&mut self) -> Token {
+        let literal = self.read_number();
+        let token_type = TokenType::INT;
         Token {
             token_type,
             literal,
