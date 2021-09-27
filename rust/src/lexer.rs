@@ -34,38 +34,22 @@ impl Lexer {
             b'-' => self.make_one_char_token(TokenType::MINUS),
             b'*' => self.make_one_char_token(TokenType::ASTERISK),
             b'/' => self.make_one_char_token(TokenType::SLASH),
-            b'=' => {
-                if self.peek_char() == b'=' {
-                    self.make_two_char_token(TokenType::EQ)
-                } else {
-                    self.make_one_char_token(TokenType::ASSIGN)
-                }
-            }
-            b'!' => {
-                if self.peek_char() == b'=' {
-                    self.make_two_char_token(TokenType::NOT_EQ)
-                } else {
-                    self.make_one_char_token(TokenType::BANG)
-                }
-            }
             b'<' => self.make_one_char_token(TokenType::LT),
             b'>' => self.make_one_char_token(TokenType::GT),
+            b'=' if self.peek_char() == b'=' => self.make_two_char_token(TokenType::EQ),
+            b'=' => self.make_one_char_token(TokenType::ASSIGN),
+            b'!' if self.peek_char() == b'=' => self.make_two_char_token(TokenType::NOT_EQ),
+            b'!' => self.make_one_char_token(TokenType::BANG),
             0 => self.make_eof_token(),
-            _ => {
-                if Self::is_letter(self.char) {
-                    return self.make_letter_token();
-                } else if Self::is_number(self.char) {
-                    return self.make_number_token();
-                } else {
-                    self.make_one_char_token(TokenType::ILLEGAL)
-                }
-            }
+            _ if Self::is_letter(self.char) => return self.make_letter_token(),
+            _ if Self::is_number(self.char) => return self.make_number_token(),
+            _ => self.make_one_char_token(TokenType::ILLEGAL),
         };
         self.read_char();
         token
     }
 
-    fn make_one_char_token(&mut self, token_type: TokenType) -> Token {
+    fn make_one_char_token(&self, token_type: TokenType) -> Token {
         Token {
             token_type,
             literal: String::from_utf8(vec![self.char]).unwrap(),
@@ -82,7 +66,7 @@ impl Lexer {
         }
     }
 
-    fn make_eof_token(&mut self) -> Token {
+    fn make_eof_token(&self) -> Token {
         Token {
             token_type: TokenType::EOF,
             literal: "".to_string(),
@@ -123,7 +107,7 @@ impl Lexer {
         self.read_position += 1;
     }
 
-    fn peek_char(&mut self) -> u8 {
+    fn peek_char(&self) -> u8 {
         if self.read_position >= self.input.len() {
             0
         } else {
