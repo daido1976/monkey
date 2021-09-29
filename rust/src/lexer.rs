@@ -54,45 +54,30 @@ impl Lexer {
     }
 
     fn make_one_char_token(&self, token_type: TokenType) -> Token {
-        Token {
-            token_type,
-            literal: String::from_utf8(vec![self.char]).unwrap(),
-        }
+        Token::new(token_type, String::from_utf8(vec![self.char]).unwrap())
     }
 
     fn make_two_char_token(&mut self, token_type: TokenType) -> Token {
         let prev_char = self.char;
         self.read_char();
         let literal = String::from_utf8(vec![prev_char, self.char]).unwrap();
-        Token {
-            token_type,
-            literal,
-        }
+        Token::new(token_type, literal)
     }
 
     fn make_eof_token(&self) -> Token {
-        Token {
-            token_type: TokenType::EOF,
-            literal: "".to_string(),
-        }
+        Token::new(TokenType::EOF, "".to_string())
     }
 
     fn make_letter_token(&mut self) -> Token {
         let identifier = self.read_identifier();
         let token_type = lookup_identifier(&identifier);
-        Token {
-            token_type,
-            literal: identifier,
-        }
+        Token::new(token_type, identifier)
     }
 
     fn make_number_token(&mut self) -> Token {
         let literal = self.read_number();
         let token_type = TokenType::INT;
-        Token {
-            token_type,
-            literal,
-        }
+        Token::new(token_type, literal)
     }
 
     fn skip_whitespace(&mut self) {
