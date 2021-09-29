@@ -3,7 +3,7 @@ use std::{
     process::{exit, Command},
 };
 
-use crate::{lexer::Lexer, token::TokenType};
+use crate::lexer::Lexer;
 
 pub fn run() {
     println!(
@@ -25,15 +25,8 @@ pub fn run() {
             exit(0);
         }
 
-        let mut l = Lexer::new(input);
-
-        loop {
-            let tok = l.next_token();
-            if tok.token_type == TokenType::EOF {
-                break;
-            }
-            println!("{:?}", tok);
-        }
+        let l = Lexer::new(input);
+        l.for_each(|t| println!("{:?}", t));
     }
 }
 
