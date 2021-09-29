@@ -1,4 +1,4 @@
-#[allow(clippy::upper_case_acronyms)]
+#[allow(clippy::upper_case_acronyms, non_camel_case_types)]
 #[derive(Debug, Eq, PartialEq)]
 pub enum TokenType {
     ILLEGAL, // ILLEGAL
@@ -53,6 +53,7 @@ pub fn lookup_identifier(identifier: &str) -> TokenType {
     }
 }
 
+#[derive(Debug)]
 pub struct Token {
     pub token_type: TokenType,
     pub literal: String,
