@@ -20,10 +20,9 @@ impl Lexer {
     }
 
     pub fn next_token(&mut self) -> Token {
-        let token: Token;
         self.skip_whitespace();
 
-        token = match self.char {
+        let token = match self.char {
             b';' => self.make_one_char_token(TokenType::SEMICOLON),
             b'(' => self.make_one_char_token(TokenType::LPAREN),
             b')' => self.make_one_char_token(TokenType::RPAREN),
